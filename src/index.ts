@@ -6,7 +6,7 @@ import { Request,Response } from "express";
 import { z } from "zod";
 import fs from "fs";
 import express from "express";
-
+import cors from "cors"
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 
 
@@ -715,7 +715,9 @@ server.registerResource(
 
 
 const app = express();
+app.use(cors());
 app.use(express.json());
+ // Add this before other middleware
 
 app.post('/mcp', async (req:Request, res:Response) => {
 
@@ -744,6 +746,10 @@ try {
             });
           }
 }
+});
+
+app.get('/health', (req: Request, res: Response) => {
+    res.json({ status: 'ok' });
 });
 const port = parseInt(process.env.PORT || '8080');
 app.listen(port, () => {
